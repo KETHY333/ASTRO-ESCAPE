@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ASTRO ESCAPE — Evolution of Astronomy</title>
+<style>
+:root{--bg:#080b18;--panel:#15192b;--panel2:#202640;--cyan:#7df9d2;--purple:#ff7ac6;--gold:#ffe27a;--green:#7df9d2;--text:#fff8f2;--muted:#c8c9da;--red:#ff7892}
+*{box-sizing:border-box}body{margin:0;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(ellipse at 12% 8%,#4c245f 0,transparent 32%),radial-gradient(ellipse at 90% 20%,#174d5b 0,transparent 28%),linear-gradient(145deg,#090b19 0%,#17132c 55%,#0a1c29 100%);min-height:100vh}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.45;background-image:radial-gradient(1px 1px at 10% 20%,#fff 99%,transparent),radial-gradient(1px 1px at 70% 10%,#fff 99%,transparent),radial-gradient(2px 2px at 35% 75%,#9bdfff 99%,transparent),radial-gradient(1px 1px at 85% 60%,#fff 99%,transparent),radial-gradient(1px 1px at 20% 90%,#fff 99%,transparent);background-size:240px 190px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px max(18px,calc((100% - 1050px)/2));border-bottom:1px solid #394574;background:#080d27cc;position:sticky;top:0;z-index:3;backdrop-filter:blur(10px)}
+.brand{font-weight:900;letter-spacing:.12em;color:var(--cyan)}.hud{font-size:.9rem;color:var(--muted)}main{max-width:1050px;margin:0 auto;padding:28px 18px 60px;position:relative;z-index:1}.screen{display:none}.screen.active{display:block}
+.card{background:linear-gradient(145deg,#151f49ed,#0e1535ed);border:1px solid #45528a;border-radius:20px;padding:clamp(18px,4vw,32px);box-shadow:0 18px 60px #0006;margin:12px 0}
+.hero{text-align:center;padding:44px 20px 38px;overflow:hidden;position:relative}.hero h1{font-size:clamp(2.5rem,8vw,5.5rem);line-height:1;margin:14px 0;color:#fff;text-shadow:0 0 24px #6b5cff}.hero .sub{font-size:1.2rem;color:var(--cyan);font-weight:700}.planet{font-size:5rem;filter:drop-shadow(0 0 18px #4fc9ff);margin:12px}
+h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:.2em 0 .5em}h3{color:var(--cyan);margin:.2em 0 .6em}p,li{line-height:1.65;color:#e3e9ff}.muted{color:var(--muted)}.small{font-size:.88rem;color:var(--muted)}
+button,.btn{border:0;border-radius:12px;padding:12px 18px;background:linear-gradient(100deg,#6d5dfc,#9274ff);color:white;font-weight:800;font-size:1rem;cursor:pointer;box-shadow:0 6px 20px #5b4bd955;transition:.15s}
+button:hover{transform:translateY(-1px);filter:brightness(1.12)}button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}button.secondary{background:#27345f;border:1px solid #6473a9;box-shadow:none}button.good{background:linear-gradient(100deg,#138c73,#25b78b)}button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:22px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}.room{min-height:160px;text-align:left;background:linear-gradient(145deg,#1c2857,#111936);border:1px solid #53619b;border-radius:18px;padding:18px;cursor:pointer}.room .emoji{font-size:2.2rem}.room h3{margin:8px 0}.room.locked{opacity:.55;filter:saturate(.5);cursor:not-allowed}.room small{color:var(--muted)}.pill{display:inline-block;padding:5px 10px;border-radius:999px;background:#27345f;color:var(--cyan);font-size:.78rem;font-weight:800;letter-spacing:.05em}
+.progress{height:10px;background:#263257;border-radius:20px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--purple));width:0;transition:width .3s}
+.option{display:block;width:100%;text-align:left;margin:9px 0;background:#202d59;border:1px solid #53639b;box-shadow:none}.option.selected{border:2px solid var(--cyan);background:#263b6b}.feedback{padding:13px 16px;border-radius:12px;margin-top:15px;background:#103b3b;border:1px solid var(--green);color:#eafff4}.feedback.wrong{background:#421e35;border-color:var(--red);color:#fff0f3}
+.objectrow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.object{background:#1b2855;border:1px solid #52639c;border-radius:16px;padding:20px 8px;text-align:center;cursor:pointer}.object b{display:block;font-size:2.4rem}.object span{font-weight:800}.model{display:grid;grid-template-columns:1fr 1fr;gap:14px}.modelbox{background:#121b40;border:1px solid #4b5b92;border-radius:16px;padding:14px;text-align:center}.orbit{height:180px;display:grid;place-items:center;position:relative;margin:5px auto;max-width:300px}.orbit:before,.orbit:after{content:"";position:absolute;border:1px solid #7c8bc0;border-radius:50%;width:150px;height:150px}.orbit.geo:after{width:230px;height:110px;transform:rotate(-25deg)}.orbit.helio:before{width:235px;height:115px;transform:rotate(-25deg)}.center{font-size:2.4rem;z-index:1}.orbit .sat{position:absolute;font-size:1.5rem;z-index:2}.orbit.geo .sat{top:6px;right:24px}.orbit.helio .sat{top:7px;right:22px}
+.sequence{display:grid;gap:8px;max-width:520px;margin:16px auto}.seqitem{padding:12px;background:#202d59;border:1px solid #53639b;border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}.seqitem button{padding:5px 10px}.crystals{font-size:1.8rem;letter-spacing:.2em}.crystal{filter:drop-shadow(0 0 8px #5ce1ff)}.hidden{display:none!important}footer{text-align:center;color:#8f9bc4;font-size:.8rem;padding:25px}
+@media(max-width:600px){header{padding:12px 14px}.hud{font-size:.75rem}.objectrow,.model{grid-template-columns:1fr}.hero{padding:30px 12px}}
+
+.quiz-console{border:1px solid #5ce1ff66;background:linear-gradient(135deg,#17234d,#241b50);border-radius:16px;padding:12px;margin:14px 0;box-shadow:0 0 22px #5ce1ff18}
+.quiz-console .console-top{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.quiz-console .xp{color:#ffd166;font-weight:800}
+.quiz-console button{background:#26396c;border:1px solid #5ce1ff;color:#fff;padding:9px 13px}
+.quiz-console button:active,.option:active,.modelbox:active{transform:scale(.97)}
+.quiz-console .scan{font-size:.9rem;color:#cfeaff;margin-top:8px;min-height:1.4em}
+.quiz-pop{animation:quizPop .35s ease}
+@keyframes quizPop{0%{transform:scale(.97);opacity:.6}100%{transform:scale(1);opacity:1}}
+.option{transition:transform .12s,background .2s,border .2s}
+
+/* Cosmic arcade visual refresh */
+.card{border:1px solid #ffffff20!important;box-shadow:0 18px 55px #0008,0 0 28px #ff7ac612!important;backdrop-filter:blur(12px)}
+h1{letter-spacing:.08em;text-shadow:0 0 22px #ff7ac688,0 5px 0 #201333}
+h2{color:#7df9d2;text-shadow:0 0 16px #7df9d244}
+.pill{background:linear-gradient(90deg,#ff7ac626,#7df9d226);border:1px solid #ff7ac655;color:#ffe27a}
+button{border-radius:13px!important;box-shadow:0 5px 0 #0005;transition:transform .15s,filter .15s,box-shadow .15s}
+button:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.14);box-shadow:0 7px 0 #0005,0 0 18px #7df9d244}
+button:disabled{opacity:.45}
+.planet{filter:drop-shadow(0 0 22px #7df9d277);animation:planetDrift 5s ease-in-out infinite}
+@keyframes planetDrift{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-9px) rotate(4deg)}}
+.audio-dock{position:fixed;right:14px;bottom:14px;z-index:20;display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:16px;background:#111426eF;border:1px solid #7df9d266;box-shadow:0 8px 28px #0009}
+.audio-dock button{padding:8px 10px!important;font-size:.85rem}
+.audio-label{font-size:.75rem;color:#d8e9ee}
+.comet-hunt{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px;margin:14px 0;border:1px dashed #ffe27a;border-radius:16px;background:linear-gradient(100deg,#37234eaa,#12364aaa);box-shadow:inset 0 0 20px #ffe27a12}
+.comet-icon{font-size:2rem;animation:cometFloat 2s ease-in-out infinite}
+.comet-hunt .bonus-question{flex-basis:100%;padding-top:8px;border-top:1px solid #ffe27a44}
+.comet-hunt .bonus-question button{margin:5px 6px 0 0;padding:8px 12px;font-size:.9rem;background:#26396c;border:1px solid #ffe27a}
+.comet-hunt .bonus-result{font-weight:800;color:#ffe27a;min-height:1.4em}
+@keyframes cometFloat{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-6px) rotate(8deg)}}
+.room:not(.locked){animation:roomGlow 4s ease-in-out infinite alternate}
+@keyframes roomGlow{from{box-shadow:0 0 0 #7df9d200}to{box-shadow:0 0 20px #7df9d222}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}}
+@media(max-width:520px){.audio-dock{right:8px;bottom:8px}.audio-label{display:none}}
+
+.orbit-scene{height:30px;position:relative;max-width:260px;margin:-4px auto 4px;color:#fff}.orbit-scene span{position:absolute;left:14%;top:-12px;font-size:1.55rem;animation:miniOrbit 5s ease-in-out infinite}.orbit-scene i{position:absolute;right:22%;top:0;color:#ffe27a;font-style:normal;animation:twinkle 1.3s ease-in-out infinite alternate}.orbit-scene b{position:absolute;right:8%;top:-13px;font-size:1.1rem;animation:cometFloat 1.8s ease-in-out infinite}@keyframes miniOrbit{0%,100%{transform:translateX(0) rotate(-12deg)}50%{transform:translateX(120px) rotate(12deg)}}@keyframes twinkle{from{opacity:.35;transform:scale(.7)}to{opacity:1;transform:scale(1.3)}}
+/* Extra colour + motion: animated nebula, shooting stars, and orbiting accents */
+body{background:radial-gradient(ellipse at 8% 18%,#8b2be255 0,transparent 30%),radial-gradient(ellipse at 88% 12%,#00d9ff35 0,transparent 26%),radial-gradient(ellipse at 78% 82%,#ff4db833 0,transparent 28%),linear-gradient(145deg,#080b22 0%,#241044 48%,#062c42 100%);background-size:140% 140%;animation:nebulaShift 18s ease-in-out infinite alternate}
+@keyframes nebulaShift{0%{background-position:0% 0%}100%{background-position:100% 100%}}
+body:after{content:"";position:fixed;z-index:0;pointer-events:none;top:12%;left:-18%;width:150px;height:2px;background:linear-gradient(90deg,transparent,#fff,#7df9d2,transparent);filter:drop-shadow(0 0 8px #7df9d2);transform:rotate(-24deg);animation:shootingStar 11s linear infinite;opacity:0}
+@keyframes shootingStar{0%,68%{left:-18%;top:12%;opacity:0}70%{opacity:1}78%{left:115%;top:42%;opacity:0}100%{left:115%;top:42%;opacity:0}}
+.hero{background:radial-gradient(circle at 50% 15%,#5b2e9d88,transparent 36%),linear-gradient(145deg,#14245fee,#28104eee 55%,#07364bee)!important;border-color:#ff7ac677!important}
+.hero h1{background:linear-gradient(90deg,#fff,#7df9d2 28%,#ffe27a 55%,#ff7ac6 82%,#fff);background-clip:text;-webkit-background-clip:text;color:transparent;text-shadow:0 0 26px #a855f766}
+.card h3{color:#ffe27a}
+.room:not(.locked){background:linear-gradient(145deg,#263b78,#41205f 58%,#0c5260);border-color:#7df9d288}
+.room:not(.locked):hover{transform:translateY(-5px) scale(1.015);filter:saturate(1.3);box-shadow:0 12px 28px #00d9ff35,0 0 24px #ff7ac633}
+.room{transition:transform .22s ease,filter .22s ease,box-shadow .22s ease}
+.option:nth-of-type(odd){background:linear-gradient(90deg,#243b70,#34235f)}
+.option:hover:not(:disabled),.object:hover,.modelbox:hover{filter:brightness(1.2) saturate(1.25);box-shadow:0 0 22px #ff7ac633}
+.screen.active{animation:screenArrive .38s cubic-bezier(.2,.8,.2,1)}
+@keyframes screenArrive{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+.crystals{animation:crystalPulse 2.5s ease-in-out infinite}
+@keyframes crystalPulse{0%,100%{filter:drop-shadow(0 0 0 #5ce1ff)}50%{filter:drop-shadow(0 0 10px #5ce1ff)}}
+.orbit.helio:before{animation:orbitTilt 8s ease-in-out infinite alternate}
+@keyframes orbitTilt{from{transform:rotate(-25deg) scale(.98)}to{transform:rotate(-18deg) scale(1.04)}}
+#paintSun{filter:drop-shadow(0 0 8px #ffd166);animation:sunPulse 2s ease-in-out infinite}
+@keyframes sunPulse{0%,100%{r:22}50%{r:25}}
+.sparkle-burst{position:fixed;z-index:50;pointer-events:none;font-size:1.35rem;animation:sparkleFly .9s ease-out forwards}
+@keyframes sparkleFly{0%{opacity:1;transform:translate(0,0) scale(.5) rotate(0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.5) rotate(180deg)}}
+@media(prefers-reduced-motion:reduce){body{animation:none}body:after{display:none}.screen.active{animation:none}.sparkle-burst{animation:none;display:none}}
+
+
+.paint-tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}.paint-tools button{padding:9px 12px;font-size:.9rem}.geo-paint-wrap{display:flex;justify-content:center}.geo-paint{width:min(100%,480px);background:radial-gradient(ellipse,#27366a,#0a102b);border:1px solid #7df9d288;border-radius:18px;touch-action:manipulation}.geo-paint circle{cursor:pointer;transition:fill .2s,filter .2s}.geo-paint circle:hover{filter:drop-shadow(0 0 8px #fff)}
+.picture-piece{min-height:92px!important;padding:8px!important;display:grid;place-items:center;background:linear-gradient(145deg,#273c79,#49276f)!important;border:2px solid #67eaff!important;border-radius:16px!important}.picture-piece svg{width:100%;height:76px;max-width:120px;filter:drop-shadow(0 3px 5px #0008)}.picture-piece.selected{outline:3px solid #ffe27a;transform:scale(1.04)}.drop-slot{min-height:92px!important;position:relative;border:2px dashed #7df9d2aa!important;background:radial-gradient(circle,#263a6a,#111b3c)!important}.drop-slot .slot-icon{font-size:2.1rem;opacity:.4;filter:grayscale(1)}.drop-slot small{position:absolute;top:4px;right:8px;color:#a9badf;font-size:.7rem}.drop-slot.filled{border-style:solid!important;border-color:#64e6a5!important;background:linear-gradient(145deg,#15594c,#18365b)!important}.drop-slot.filled .slot-icon,.drop-slot.filled small{display:none}.drop-slot.filled svg{width:100%;height:76px;max-width:120px;filter:drop-shadow(0 3px 5px #0008)}
+.telescope-puzzle{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}.telescope-parts,.telescope-slots{display:grid;grid-template-columns:1fr 1fr;gap:9px}.telescope-parts button{min-height:68px;padding:10px;font-size:.9rem;background:linear-gradient(135deg,#26477c,#49306d);border:1px solid #7df9d2}.telescope-parts button.selected{outline:3px solid #ffe27a}.drop-slot{min-height:68px;border:2px dashed #7df9d2aa;border-radius:12px;display:grid;place-items:center;padding:8px;text-align:center;color:#d8e9ee;background:#111b3c;font-weight:700}.drop-slot.filled{border-style:solid;border-color:#64e6a5;background:#16443e;color:white;animation:quizPop .25s ease}.ellipse-lab{padding:14px;border-radius:18px;background:linear-gradient(135deg,#111b3c,#2a1c50);border:1px solid #ff7ac677}.ellipse-lab svg{width:100%;max-width:560px;display:block;margin:10px auto;background:#080d28;border-radius:14px;border:1px solid #7df9d255;touch-action:none;cursor:crosshair}.ellipse-lab .actions{margin-top:8px}
+@media(max-width:600px){.telescope-puzzle{grid-template-columns:1fr}.telescope-parts,.telescope-slots{grid-template-columns:1fr 1fr}}
+.telescope-jigsaw{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}.telescope-jigsaw h4{margin:4px 0 9px;color:#bdfaff}.jigsaw-pieces,.jigsaw-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:8px;border-radius:15px;background:linear-gradient(145deg,#101a3e,#261a4a);border:1px solid #7df9d277}.jigsaw-piece,.jigsaw-slot{aspect-ratio:1.25/1;min-width:0;padding:0!important;overflow:hidden;border-radius:7px!important;display:grid;place-items:stretch;background:#101a3e!important;border:1px solid #7df9d2!important;touch-action:manipulation}.jigsaw-piece{cursor:grab;box-shadow:0 3px 8px #0005}.jigsaw-piece:active{cursor:grabbing}.jigsaw-piece.selected{outline:3px solid #ffe27a;transform:scale(1.04);z-index:1}.jigsaw-piece svg,.jigsaw-slot svg{width:100%;height:100%;display:block}.jigsaw-slot{border:2px dashed #a4b5e8!important;background:linear-gradient(135deg,#131d40,#1d2048)!important}.jigsaw-slot.filled{border:1px solid #64e6a5!important;animation:quizPop .25s ease;background:#16443e!important}.jigsaw-slot .slot-number{display:grid;place-items:center;height:100%;font-size:1rem;color:#8092bd;opacity:.75}.jigsaw-slot.filled .slot-number{display:none}.jigsaw-piece:disabled{opacity:.28;filter:grayscale(.6);cursor:default}.jigsaw-piece:focus-visible,.jigsaw-slot:focus-visible{outline:3px solid #ffe27a;outline-offset:2px}@media(max-width:600px){.telescope-jigsaw{grid-template-columns:1fr}.jigsaw-pieces,.jigsaw-board{gap:4px;padding:6px}}
+</style>
+</head>
+<body>
+<header><div class="brand">✦ ASTRO ESCAPE</div><div class="hud"><span id="hudCrystals">💎 0/5</span> &nbsp;·&nbsp; <span id="hudRoom">MISSION CONTROL</span></div></header>
+<main>
+<section id="home" class="screen active">
+ <div class="card hero"><div class="pill">FORM 1 SCIENCE • DIGITAL LEARNING GAME</div><div class="planet">🌍</div><div class="orbit-scene" aria-hidden="true"><span>🪐</span><i>✦</i><b>☄️</b></div><h1>ASTRO<br>ESCAPE</h1><div class="sub">Unlock the History of Astronomy</div><p>Explore the sky, investigate scientific evidence, and recover five Knowledge Crystals.</p><div class="crystals">💎 💎 💎 💎 💎</div><div class="actions"><button onclick="startGame()">🚀 START MISSION</button></div></div>
+ <p class="small" style="text-align:center">Play in your browser. No account or internet connection required after opening this file.</p>
+</section>
+<section id="briefing" class="screen"><div class="card"><span class="pill">MISSION BRIEFING</span><h2>Welcome, Astronomy Explorer!</h2><p>The Astronomy Archive has been locked. Travel through five chambers to discover how explanations of the sky developed.</p><h3>Mission objectives</h3><ul><li>Describe how astronomical ideas developed over time.</li><li>Compare geocentric and heliocentric models.</li><li>Identify contributions of Galileo, Kepler and Newton.</li><li>Use evidence to explain why scientific ideas change.</li></ul><p><b>How to play:</b> Explore each chamber, complete its activity, read the feedback, and unlock the next chamber.</p><div class="actions"><button onclick="show('map')">ENTER THE ARCHIVE →</button></div></div></section>
+<section id="map" class="screen"><div class="card"><span class="pill">MISSION CONTROL</span><h2>🗺️ Astronomy Archive</h2><p>Choose an unlocked chamber. Complete its activity to earn a crystal.</p><div class="progress"><span id="progressbar"></span></div><div class="small" id="progressText">0 of 5 chambers completed</div><div class="grid" id="rooms"></div><div class="actions"><button class="good" onclick="show('arcade')">🎮 PLAY THE ASTRONOMY ARCADE</button><button class="secondary" onclick="show('briefing')">Mission briefing</button></div></div></section>
+<section id="room1" class="screen"><div class="card"><span class="pill">CHAMBER 1 • ANCIENT SKY</span><h2>🔭 Observe before you explain</h2><div class="quiz-console"><div class="console-top"><b>🛰️ MISSION CONTROL • CHAMBER 1</b><span class="xp" id="xp1">✨ 0 XP</span></div><div><button onclick="scanClue(1)">📡 Scan for a clue</button> <button onclick="showHint(1)">💡 Need a hint?</button></div><div class="scan" id="scan1">Scan the archive to reveal a clue before your answer.</div></div><p>Before telescopes, people watched repeating patterns in the sky. Select each object to reveal how observations could be useful.</p><div class="objectrow"><button class="object" onclick="reveal('sun')"><b>☀️</b><span>Sun</span></button><button class="object" onclick="reveal('moon')"><b>🌙</b><span>Moon</span></button><button class="object" onclick="reveal('stars')"><b>⭐</b><span>Stars</span></button></div><div id="discovery" class="feedback hidden"></div><div id="r1task" class="hidden"><h3>Challenge: choose a useful application</h3><p>Which could observations of the Sun help people track?</p><button class="option" onclick="answer(1,0)">A. Time and seasonal changes</button><button class="option" onclick="answer(1,1)">B. The chemical composition of Earth</button><button class="option" onclick="answer(1,2)">C. The mass of Jupiter</button><div id="fb1"></div></div><div class="actions"><button class="secondary" onclick="show('map')">← Map</button><button id="next1" disabled onclick="complete(1)">Collect Crystal 1 💎</button></div></div></section>
+<section id="room2" class="screen"><div class="card"><span class="pill">CHAMBER 2 • GEOCENTRIC MODEL</span><h2>🌍 Rebuild the Earth-centred model</h2><div class="quiz-console"><div class="console-top"><b>🛰️ MISSION CONTROL • CHAMBER 2</b><span class="xp" id="xp2">✨ 0 XP</span></div><div><button onclick="scanClue(2)">📡 Scan for a clue</button> <button onclick="showHint(2)">💡 Need a hint?</button></div><div class="scan" id="scan2">Scan the archive to reveal a clue before your answer.</div></div><p><b>Colour-and-build challenge:</b> In this simplified geocentric model, Earth is at the centre and the Sun moves around it. Choose a colour, then tap the Earth and Sun to paint them.</p><div class="paint-tools"><button onclick="setGeoPaint('#5ce1ff')">🔵 Ocean blue</button><button onclick="setGeoPaint('#64e6a5')">🟢 Green</button><button onclick="setGeoPaint('#ffd166')">🟡 Gold</button><button onclick="setGeoPaint('#ff8295')">🩷 Pink</button><button onclick="setGeoPaint('#a78bfa')">🟣 Purple</button></div><div class="geo-paint-wrap"><svg viewBox="0 0 340 230" role="img" aria-label="Geocentric model with Earth at the centre and Sun on an orbit" class="geo-paint"><ellipse cx="170" cy="115" rx="126" ry="76" fill="none" stroke="#aab9ff" stroke-width="2" stroke-dasharray="7 6"/><circle id="geoEarth" cx="170" cy="115" r="29" fill="#5ce1ff" stroke="#fff" stroke-width="2" onclick="paintGeo(this)"/><path d="M150 108 Q158 93 168 104 L164 116 151 119Z M174 121 Q187 112 192 126 L182 137 171 132Z" fill="#64e6a5" pointer-events="none"/><circle id="geoSun" cx="296" cy="115" r="20" fill="#ffd166" stroke="#fff" stroke-width="2" onclick="paintGeo(this)"/><g stroke="#ffd166" stroke-width="3" stroke-linecap="round"><path d="M296 86v-7 M296 144v7 M267 115h-7 M325 115h7 M276 95l-5-5 M316 135l5 5 M316 95l5-5 M276 135l-5 5"/></g><text x="170" y="164" fill="white" text-anchor="middle" font-size="12">Earth (centre)</text><text x="296" y="151" fill="white" text-anchor="middle" font-size="12">Sun</text></svg></div><div id="geoPaintMsg" class="feedback" aria-live="polite">Paint both objects to complete the model.</div><button class="secondary" onclick="resetGeoPaint()">Reset colours</button><div id="fb2"></div><div class="actions"><button class="secondary" onclick="show('map')">← Map</button><button id="next2" disabled onclick="complete(2)">Collect Crystal 2 💎</button></div></div></section>
+<section id="room3" class="screen"><div class="card"><span class="pill">CHAMBER 3 • HELIOCENTRIC MODEL</span><h2>☀️ Switch the model</h2><div class="quiz-console"><div class="console-top"><b>🛰️ MISSION CONTROL • CHAMBER 3</b><span class="xp" id="xp3">✨ 0 XP</span></div><div><button onclick="scanClue(3)">📡 Scan for a clue</button> <button onclick="showHint(3)">💡 Need a hint?</button></div><div class="scan" id="scan3">Scan the archive to reveal a clue before your answer.</div></div><p>Copernicus proposed a heliocentric model: the planets orbit the Sun. Choose the statement that describes it.</p><button class="option" onclick="answer(3,0)">A. Earth is the centre and everything orbits Earth.</button><button class="option" onclick="answer(3,1)">B. The Sun is at the centre of the planetary system; planets orbit it.</button><button class="option" onclick="answer(3,2)">C. The Moon is at the centre of the Solar System.</button><div id="fb3"></div><div class="actions"><button class="secondary" onclick="show('map')">← Map</button><button id="next3" disabled onclick="complete(3)">Collect Crystal 3 💎</button></div></div></section>
+<section id="room4" class="screen"><div class="card"><span class="pill">CHAMBER 4 • GALILEO'S OBSERVATORY</span><h2>🔭 Investigate the evidence</h2><div class="quiz-console"><div class="console-top"><b>🛰️ MISSION CONTROL • CHAMBER 4</b><span class="xp" id="xp4">✨ 0 XP</span></div><div><button onclick="scanClue(4)">📡 Scan for a clue</button> <button onclick="showHint(4)">💡 Need a hint?</button></div><div class="scan" id="scan4">Scan the archive to reveal a clue before your answer.</div></div><p>Galileo used a telescope to make observations that challenged some traditional ideas. Click each observation card.</p><div class="grid"><button class="object" onclick="obs('moon')"><b>🌙</b><span>Moon</span></button><button class="object" onclick="obs('jupiter')"><b>🪐</b><span>Jupiter</span></button><button class="object" onclick="obs('venus')"><b>♀️</b><span>Venus</span></button></div><div id="obsText" class="feedback hidden"></div><h3>🧩 Telescope Jigsaw: Repair the Image</h3><p>The telescope image has been scrambled into 9 picture fragments. Drag each fragment into the matching position to restore the complete picture. On a phone or tablet, tap a fragment, then tap its place.</p><div class="telescope-jigsaw"><div><h4>🧩 Scrambled fragments</h4><div class="jigsaw-pieces" id="telescopeParts" aria-label="Scrambled telescope picture fragments"></div></div><div><h4>🔭 Restore the telescope</h4><div class="jigsaw-board" id="telescopeSlots" aria-label="Telescope jigsaw board"></div></div></div><div id="fb4" class="feedback" aria-live="polite">Put the picture fragments in the correct places to repair the telescope.</div><div class="actions"><button class="secondary" onclick="show('map')">← Map</button><button id="next4" disabled onclick="complete(4)">Collect Crystal 4 💎</button></div></div></section>
+<section id="room5" class="screen"><div class="card"><span class="pill">CHAMBER 5 • KEPLER & NEWTON</span><h2>📐 Solve the motion puzzle</h2><div class="quiz-console"><div class="console-top"><b>🛰️ MISSION CONTROL • CHAMBER 5</b><span class="xp" id="xp5">✨ 0 XP</span></div><div><button onclick="scanClue(5)">📡 Scan for a clue</button> <button onclick="showHint(5)">💡 Need a hint?</button></div><div class="scan" id="scan5">Scan the archive to reveal a clue before your answer.</div></div><p>Kepler’s first law describes planetary orbits as ellipses, with the Sun at one focus. Draw an oval orbit in the space below: press or touch, then drag diagonally to shape your ellipse.</p><div class="ellipse-lab"><div class="small">Trace the dotted guide with your own ellipse.</div><svg id="ellipseBoard" viewBox="0 0 340 210" aria-label="Drawing board for an elliptical orbit" role="img"><ellipse cx="170" cy="105" rx="122" ry="57" fill="none" stroke="#7df9d2" stroke-width="2" stroke-dasharray="6 6" opacity=".55"/><circle cx="132" cy="105" r="10" fill="#ffd166" stroke="#fff" stroke-width="1.5"/><text x="132" y="128" fill="white" font-size="11" text-anchor="middle">Sun</text><ellipse id="userEllipse" cx="170" cy="105" rx="0" ry="0" fill="#ff7ac622" stroke="#ff7ac6" stroke-width="4" style="display:none"/></svg><div class="actions"><button onclick="clearEllipse()" class="secondary">Clear drawing</button><button onclick="finishEllipse()" class="good">Check my ellipse ✓</button></div><div id="fb5a" class="feedback" aria-live="polite">Your drawing will appear in pink.</div></div><h3>Newton's clue</h3><p>Which force helps explain planetary motion?</p><button class="option" onclick="answer(5,0)">A. Sound</button><button class="option" onclick="answer(5,1)">B. Gravity</button><button class="option" onclick="answer(5,2)">C. Magnetism between all planets</button><div id="fb5b"></div><div class="actions"><button class="secondary" onclick="show('map')">← Map</button><button id="next5" disabled onclick="complete(5)">Collect Crystal 5 💎</button></div></div></section>
+<section id="final" class="screen"><div class="card hero"><span class="pill">FINAL ARCHIVE LOCK</span><h2>🧠 Why did astronomical ideas change over time?</h2><p>Use what you discovered in the five chambers.</p><button class="option" onclick="finalAnswer(0)">A. Scientists changed ideas without evidence.</button><button class="option" onclick="finalAnswer(1)">B. New observations and evidence helped scientists improve explanations.</button><button class="option" onclick="finalAnswer(2)">C. Scientists simply chose a different model.</button><button class="option" onclick="finalAnswer(3)">D. Old ideas disappeared automatically.</button><div id="finalFeedback"></div><div class="actions"><button class="secondary" onclick="show('map')">← Map</button><button id="finishBtn" class="good hidden" onclick="show('complete')">Unlock completion page 🏆</button></div></div></section>
+<section id="complete" class="screen"><div class="card hero"><span class="pill">ARCHIVE UNLOCKED</span><div class="planet">🏆</div><h1 style="font-size:3rem">MISSION<br>COMPLETE!</h1><p>You recovered the five Knowledge Crystals and explored how astronomical explanations developed.</p><div class="crystals">💎 💎 💎 💎 💎</div><h3>Astronomy Explorer</h3><p>Reflection: Complete this sentence in your notebook or learning journal.</p><p><b>“Scientific knowledge can change when…”</b></p><textarea id="reflection" rows="3" style="width:100%;border-radius:12px;padding:12px;background:#0b1230;color:white;border:1px solid #53639b" placeholder="Write your reflection here..."></textarea><div class="actions"><button onclick="saveReflection()">Save reflection on this device</button><button class="secondary" onclick="show('sources')">Sources & credits</button><button class="secondary" onclick="resetGame()">Replay game</button></div><div id="saved" class="small"></div></div></section>
+<section id="sources" class="screen"><div class="card"><span class="pill">TEACHER / STUDENT REFERENCE</span><h2>📚 Sources & media credits</h2><p>Use these starting references and verify the exact pages used in your final submission. Add credits for any additional images or media you insert.</p><ul><li>NASA Solar System Exploration. (n.d.). <i>Solar system exploration</i>. https://solarsystem.nasa.gov/</li><li>NASA Space Place. (n.d.). <i>What is a solar system?</i> https://spaceplace.nasa.gov/</li><li>Encyclopaedia Britannica. (n.d.). <i>History of astronomy</i>. https://www.britannica.com/science/astronomy/History-of-astronomy</li></ul><p class="small">The game uses emoji and CSS-drawn diagrams as built-in visuals. If you replace them with external media, cite each asset and its creator/source. Review scientific wording against your course materials before submission.</p><div class="actions"><button class="secondary" onclick="show('complete')">← Completion page</button><button onclick="window.print()">Print / Save as PDF</button></div></div></section>
+
+<section id="arcade" class="screen"><div class="card">
+<span class="pill">BONUS GAME ZONE</span><h2>🎮 Astronomy Arcade</h2>
+<p>Take a break from the missions! Explore, colour and solve a science puzzle.</p>
+<div class="card" style="background:var(--panel2);margin:16px 0">
+<h3>🔭 1. Telescope Viewer</h3><p>Choose an object to reveal what an astronomer can learn from observing it.</p>
+<div class="grid"><button onclick="viewObject('moon')">🌙 Moon</button><button onclick="viewObject('venus')">♀️ Venus</button><button onclick="viewObject('jupiter')">🪐 Jupiter</button></div>
+<div id="viewer" class="feedback" style="margin-top:12px">Point your telescope at an object!</div></div>
+<div class="card" style="background:var(--panel2);margin:16px 0">
+<h3>🧩 2. Astronomy Timeline Puzzle</h3><p>Tap the discoveries in the order shown by the clues. Put the earliest first.</p>
+<div class="small">Clue: Ancient sky-watching came before the Earth-centred model, which came before the Sun-centred model.</div>
+<div id="puzzleChoices" class="grid" style="margin-top:12px"><button onclick="pickTimeline('ancient',this)">🌌 Ancient observations</button><button onclick="pickTimeline('geo',this)">🌍 Geocentric model</button><button onclick="pickTimeline('helio',this)">☀️ Heliocentric model</button></div>
+<p id="puzzleProgress" class="feedback" aria-live="polite">Chosen order: none</p><button class="secondary" onclick="resetTimeline()">Reset puzzle</button></div>
+<div class="card" style="background:var(--panel2);margin:16px 0">
+<h3>🎨 3. Colour the Solar System</h3><p>Choose a colour, then tap a planet or the Sun. Colours are for creativity, not realistic scale.</p>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(100px,1fr))"><button onclick="setPaint('#ffd166')">🟡 Gold</button><button onclick="setPaint('#ff8295')">🩷 Pink</button><button onclick="setPaint('#5ce1ff')">🔵 Blue</button><button onclick="setPaint('#a78bfa')">🟣 Purple</button><button onclick="setPaint('#64e6a5')">🟢 Green</button></div>
+<div style="display:flex;justify-content:center;margin:14px 0"><svg viewBox="0 0 340 220" width="100%" style="max-width:480px;background:#080d28;border-radius:14px">
+<ellipse cx="170" cy="110" rx="145" ry="80" fill="none" stroke="#53618d" stroke-dasharray="4 5"/><ellipse cx="170" cy="110" rx="108" ry="58" fill="none" stroke="#53618d" stroke-dasharray="4 5"/>
+<circle id="paintSun" cx="170" cy="110" r="22" fill="#ffd166" onclick="paintObject(this)" style="cursor:pointer"/><circle id="paintEarth" cx="278" cy="110" r="11" fill="#5ce1ff" onclick="paintObject(this)" style="cursor:pointer"/><circle id="paintVenus" cx="62" cy="110" r="9" fill="#a78bfa" onclick="paintObject(this)" style="cursor:pointer"/><circle id="paintMars" cx="170" cy="30" r="8" fill="#ff8295" onclick="paintObject(this)" style="cursor:pointer"/>
+<text x="170" y="151" fill="white" text-anchor="middle" font-size="11">Sun</text><text x="278" y="132" fill="white" text-anchor="middle" font-size="11">Earth</text><text x="62" y="132" fill="white" text-anchor="middle" font-size="11">Venus</text><text x="170" y="17" fill="white" text-anchor="middle" font-size="11">Mars</text></svg></div>
+<div id="paintMessage" class="small">Select a colour, then tap an object in the model.</div><button class="secondary" onclick="resetColours()">Reset colours</button></div>
+<div class="actions"><button class="secondary" onclick="show('map')">← Back to Archive Map</button></div>
+</div></section>
+<div class="audio-dock"><span class="audio-label">COSMIC AMBIENCE</span><button id="musicBtn" onclick="toggleMusic()">♫ Play music</button><button onclick="changeVolume()" title="Change volume">🔊</button></div></main><footer>ASTRO ESCAPE • Evolution of Astronomy • A browser-based learning prototype</footer>
+<script>
+const names=['The Ancient Sky','The Earth-Centred Mystery','The Sun-Centred Revolution',"Galileo's Observatory",'Kepler & Newton'];
+let done=JSON.parse(localStorage.getItem('astroDone')||'[false,false,false,false,false]');
+let discovered={sun:false,moon:false,stars:false};let r1correct=false, orbitOK=false, gravityOK=false;
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');let n=id==='home'?'MISSION CONTROL':id==='map'?'ARCHIVE MAP':id.startsWith('room')?names[Number(id.slice(-1))-1].toUpperCase():id.toUpperCase();document.getElementById('hudRoom').textContent=n;if(id.startsWith('room'))addComet(Number(id.slice(-1)));renderMap();window.scrollTo(0,0)}
+
+let cometCrystals=JSON.parse(localStorage.getItem('astroComets')||'[false,false,false,false,false]');
+function addComet(room){
+ const card=document.querySelector('#room'+room+' .card');if(!card)return;
+ let hunt=card.querySelector('.comet-hunt');if(hunt)hunt.remove();
+ hunt=document.createElement('div');hunt.className='comet-hunt';
+ const collected=!!cometCrystals[room-1];
+ const challenges=[
+  {q:'Which sky pattern can help mark the seasons?',a:['The yearly path of the Sun','A single cloud','A random shooting star'],correct:0,why:'The Sun’s yearly pattern helped people recognize seasonal changes.'},
+  {q:'What does “geocentric” mean?',a:['Moon-centred','Earth-centred','Star-centred'],correct:1,why:'Geo means Earth: the model places Earth at the centre.'},
+  {q:'In the heliocentric model, what do planets orbit?',a:['The Sun','The Moon','Polaris'],correct:0,why:'Heliocentric means Sun-centred; planets orbit the Sun.'},
+  {q:'What did Galileo observe orbiting Jupiter?',a:['Rings','Four large moons','Earth'],correct:1,why:'The moons showed that not everything orbits Earth.'},
+  {q:'What shape did Kepler describe for planetary orbits?',a:['A perfect square','An ellipse','A straight line'],correct:1,why:'Kepler’s first law describes elliptical planetary orbits.'}
+ ];
+ const c=challenges[room-1];
+ hunt.innerHTML=`<div class="comet-icon">☄️</div><div style="flex:1"><b>☄️ Hidden Comet Bonus</b><div class="small">${collected?'Bonus star recovered!':'A comet signal is hiding here. Solve its quick-fire question to earn a bonus star.'}</div></div>${collected?'<span class="pill">⭐ +1 STAR</span>':'<button type="button" class="bonus-start">Intercept signal</button>'}<div class="bonus-question" ${collected?'hidden':''} style="display:none"><b>${c.q}</b><div>${c.a.map((a,i)=>`<button type="button" data-choice="${i}">${String.fromCharCode(65+i)}. ${a}</button>`).join('')}</div><div class="bonus-result" aria-live="polite"></div></div>`;
+ const startBtn=hunt.querySelector('.bonus-start'),question=hunt.querySelector('.bonus-question');
+ if(startBtn)startBtn.onclick=()=>{question.style.display='block';startBtn.disabled=true;startBtn.textContent='Signal intercepted'};
+ hunt.querySelectorAll('[data-choice]').forEach(btn=>btn.onclick=()=>{
+  const result=hunt.querySelector('.bonus-result');
+  if(Number(btn.dataset.choice)===c.correct){
+   if(!cometCrystals[room-1]){cometCrystals[room-1]=true;localStorage.setItem('astroComets',JSON.stringify(cometCrystals));}
+   result.textContent='✨ Correct! '+c.why+' Bonus star recovered!';
+   hunt.querySelectorAll('[data-choice]').forEach(b=>b.disabled=true);
+   const start=hunt.querySelector('.bonus-start');if(start)start.remove();
+   const badge=document.createElement('span');badge.className='pill';badge.textContent='⭐ +1 STAR';hunt.querySelector('.comet-icon').after(badge);
+   renderMap();sparkleBurst();
+  }else{result.textContent='Not yet! Re-read the clue and try another answer.';btn.disabled=true;}
+ });
+ card.insertBefore(hunt,card.children[1]||null);
+}
+
+let timelinePicked=[],paintColour='#ffd166';
+let musicCtx=null,musicOn=false,masterGain=null,oscillators=[],musicVolume=.16,musicTimer=null,musicStep=0;
+const melody=[523.25,659.25,783.99,659.25,523.25,392,440,523.25,659.25,523.25,392,329.63,392,523.25,392,293.66];
+async function startGame(){
+ // Start audio directly from the player's Start Mission gesture.
+ await startMusic();
+ show('briefing');
+}
+async function startMusic(){
+ const btn=document.getElementById('musicBtn');
+ const AC=window.AudioContext||window.webkitAudioContext;
+ if(!AC){btn.textContent='♫ Tap for music';return;}
+ try{
+  if(!musicCtx){
+   musicCtx=new AC();masterGain=musicCtx.createGain();masterGain.gain.value=0;masterGain.connect(musicCtx.destination);
+   const bass=musicCtx.createOscillator(),bassGain=musicCtx.createGain();
+   bass.type='sine';bass.frequency.value=110;bassGain.gain.value=.22;bass.connect(bassGain);bassGain.connect(masterGain);bass.start();oscillators.push(bass);
+   const lead=musicCtx.createOscillator(),leadGain=musicCtx.createGain(),filter=musicCtx.createBiquadFilter();
+   lead.type='square';lead.frequency.value=melody[0];leadGain.gain.value=.105;filter.type='lowpass';filter.frequency.value=2400;
+   lead.connect(filter);filter.connect(leadGain);leadGain.connect(masterGain);lead.start();oscillators.push(lead);
+   musicCtx._lead=lead;musicCtx._leadGain=leadGain;
+   // Add a soft, bouncy sub-note for a playful arcade feel.
+   const plop=musicCtx.createOscillator(),plopGain=musicCtx.createGain();plop.type='sine';plop.frequency.value=180;plopGain.gain.value=0;plop.connect(plopGain);plopGain.connect(masterGain);plop.start();musicCtx._plop=plop;musicCtx._plopGain=plopGain;
+  }
+  if(musicCtx.state!=='running')await musicCtx.resume();
+  musicOn=true;masterGain.gain.setTargetAtTime(musicVolume,musicCtx.currentTime,.08);
+  if(musicTimer===null)musicTimer=window.setInterval(()=>{
+   if(!musicOn||!musicCtx||musicCtx.state!=='running')return;
+   musicStep=(musicStep+1)%melody.length;
+   const now=musicCtx.currentTime;
+   musicCtx._lead.frequency.setTargetAtTime(melody[musicStep],now,.025);
+   // Little cartoon 'boing' every fourth beat.
+   if(musicStep%4===0){musicCtx._plop.frequency.setTargetAtTime(melody[musicStep]*.5,now,.01);musicCtx._plopGain.gain.cancelScheduledValues(now);musicCtx._plopGain.gain.setValueAtTime(.0001,now);musicCtx._plopGain.gain.exponentialRampToValueAtTime(.12,now+.035);musicCtx._plopGain.gain.exponentialRampToValueAtTime(.0001,now+.19);}
+  },260);
+  btn.textContent='♫ Pause music';
+ }catch(err){musicOn=false;btn.textContent='♫ Tap to enable music';}
+}
+async function toggleMusic(){
+ if(!musicOn){await startMusic();return;}
+ musicOn=false;
+ if(musicCtx&&masterGain)masterGain.gain.setTargetAtTime(0,musicCtx.currentTime,.08);
+ const btn=document.getElementById('musicBtn');if(btn)btn.textContent='♫ Play music';
+}
+async function changeVolume(){
+ musicVolume=musicVolume>=.15?.06:.16;
+ if(!musicCtx||!musicOn){await startMusic();return;}
+ if(musicCtx.state!=='running'){try{await musicCtx.resume()}catch(e){}}
+ masterGain.gain.setTargetAtTime(musicVolume,musicCtx.currentTime,.08);
+ const btn=document.querySelector('.audio-dock button[title="Change volume"]');if(btn)btn.textContent=musicVolume>=.15?'🔊':'🔉';
+}
+let quizXP=JSON.parse(localStorage.getItem('astroQuizXP')||'[0,0,0,0,0]');
+let scanned=[false,false,false,false,false];
+const quizHints=[
+"Look at the Sun observation: repeating patterns can help people track time and seasons.",
+"Geocentric means Earth-centred. Find the diagram with Earth in the middle.",
+"Helio means Sun. Which model places the Sun at the centre?",
+"Jupiter's moons orbit Jupiter, not Earth. What does that tell you?",
+"Kepler described oval-shaped orbits. Newton explained motion with gravity."
+];
+function scanClue(n){
+ scanned[n-1]=true;
+ const texts=[
+ "SCAN COMPLETE: The Sun's repeating patterns helped people track time and seasons.",
+ "SCAN COMPLETE: Geocentric means Earth is at the centre.",
+ "SCAN COMPLETE: Heliocentric means the Sun is at the centre.",
+ "SCAN COMPLETE: Galileo saw moons orbiting Jupiter.",
+ "SCAN COMPLETE: Kepler described elliptical orbits; Newton described gravity."
+ ];
+ const e=document.getElementById('scan'+n);e.textContent='📡 '+texts[n-1];e.classList.remove('quiz-pop');void e.offsetWidth;e.classList.add('quiz-pop');
+}
+function showHint(n){const e=document.getElementById('scan'+n);e.textContent='💡 HINT: '+quizHints[n-1];e.classList.remove('quiz-pop');void e.offsetWidth;e.classList.add('quiz-pop')}
+function sparkleBurst(){
+ const glyphs=['✨','⭐','💎','🌟','🪐'];
+ for(let i=0;i<14;i++){
+  const el=document.createElement('span');el.className='sparkle-burst';el.textContent=glyphs[i%glyphs.length];
+  el.style.left=(42+Math.random()*16)+'vw';el.style.top=(38+Math.random()*18)+'vh';
+  el.style.setProperty('--dx',((Math.random()-.5)*260)+'px');el.style.setProperty('--dy',((Math.random()-.5)*220)+'px');
+  document.body.appendChild(el);setTimeout(()=>el.remove(),950);
+ }
+}
+function awardXP(n){
+ if(quizXP[n-1]===0){quizXP[n-1]=100;localStorage.setItem('astroQuizXP',JSON.stringify(quizXP));}
+ const e=document.getElementById('xp'+n);if(e)e.textContent='✨ '+quizXP[n-1]+' XP';if(e){e.classList.remove('quiz-pop');void e.offsetWidth;e.classList.add('quiz-pop')}sparkleBurst();
+}
+
+function viewObject(which){
+ const facts={moon:'The Moon has phases and a surface with craters and mountains. Galileo’s telescope observations challenged the idea that all celestial bodies were perfect.',venus:'Venus shows phases. Galileo’s observations supported the Sun-centred model over the traditional Ptolemaic arrangement.',jupiter:'Jupiter has moons orbiting it. Galileo observed four large moons, showing that not everything circles Earth.'};
+ document.getElementById('viewer').textContent=facts[which];
+}
+function pickTimeline(which,btn){
+ if(timelinePicked.includes(which))return;
+ timelinePicked.push(which);btn.disabled=true;
+ const labels={ancient:'Ancient observations',geo:'Geocentric model',helio:'Heliocentric model'};
+ const out=document.getElementById('puzzleProgress');
+ out.textContent='Chosen order: '+timelinePicked.map(x=>labels[x]).join(' → ');
+ if(timelinePicked.length===3){
+  if(timelinePicked.join(',')==='ancient,geo,helio')out.textContent='🎉 Puzzle solved! You arranged the broad historical sequence correctly.';
+  else out.textContent='Almost! Think about which idea came first, then reset and try again.';
+ }
+}
+function resetTimeline(){timelinePicked=[];document.querySelectorAll('#puzzleChoices button').forEach(b=>b.disabled=false);document.getElementById('puzzleProgress').textContent='Chosen order: none';}
+function setPaint(c){paintColour=c;document.getElementById('paintMessage').textContent='Colour selected. Now tap the Sun, Earth, Venus or Mars.'}
+function paintObject(el){el.setAttribute('fill',paintColour);document.getElementById('paintMessage').textContent='Nice! Keep colouring the model.'}
+function resetColours(){[['paintSun','#ffd166'],['paintEarth','#5ce1ff'],['paintVenus','#a78bfa'],['paintMars','#ff8295']].forEach(([id,c])=>document.getElementById(id).setAttribute('fill',c));}
+
+let geoPaintColour='#5ce1ff',geoPainted={earth:false,sun:false},telescopeSelected=null,telescopePlaced={},ellipseDrawing=false,ellipseStart=null,ellipseWasDrawn=false;
+function setGeoPaint(c){geoPaintColour=c;document.getElementById('geoPaintMsg').textContent='Colour selected! Tap Earth and Sun to paint them.'}
+function paintGeo(el){el.setAttribute('fill',geoPaintColour);geoPainted[el.id==='geoEarth'?'earth':'sun']=true;const msg=document.getElementById('geoPaintMsg');if(geoPainted.earth&&geoPainted.sun){msg.textContent='🌟 Model complete! Earth is at the centre, with the Sun on the orbit.';msg.classList.add('quiz-pop');awardXP(2);document.getElementById('next2').disabled=false}else msg.textContent='Nice! Now colour the '+(geoPainted.earth?'Sun':'Earth')+'.'}
+function resetGeoPaint(){geoPainted={earth:false,sun:false};document.getElementById('geoEarth').setAttribute('fill','#5ce1ff');document.getElementById('geoSun').setAttribute('fill','#ffd166');document.getElementById('geoPaintMsg').textContent='Paint both objects to complete the model.';document.getElementById('next2').disabled=true}
+const telescopeArt=`<defs><linearGradient id="jigTube" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#d9fbff"/><stop offset=".48" stop-color="#579bdc"/><stop offset="1" stop-color="#293b86"/></linearGradient><linearGradient id="jigLens" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e5ffff"/><stop offset=".45" stop-color="#53dfff"/><stop offset="1" stop-color="#4a54bb"/></linearGradient></defs><rect width="300" height="240" fill="#111a43"/><g fill="#fff"><circle cx="25" cy="27" r="2"/><circle cx="268" cy="35" r="2"/><circle cx="42" cy="190" r="1.5"/><circle cx="270" cy="205" r="2"/><circle cx="225" cy="20" r="1.5"/><circle cx="84" cy="42" r="1.3"/></g><g transform="rotate(-13 155 115)"><path d="M78 82 L224 82 Q235 82 235 94 L235 126 Q235 138 224 138 L78 138 Z" fill="url(#jigTube)" stroke="#d8fbff" stroke-width="4"/><path d="M92 88 V132 M211 86 V134" stroke="#e9ffff" stroke-width="5" opacity=".55"/><path d="M104 95 H203" stroke="#fff" stroke-width="3" opacity=".22"/><path d="M70 75 Q55 110 70 145 L85 139 L85 81Z" fill="url(#jigLens)" stroke="#eaffff" stroke-width="4"/><ellipse cx="69" cy="110" rx="12" ry="35" fill="#58dfff" stroke="#fff" stroke-width="4"/><ellipse cx="67" cy="110" rx="5" ry="25" fill="none" stroke="#fff" stroke-width="2" opacity=".7"/><path d="M235 91 H253 L263 101 V119 L253 129 H235Z" fill="#8c7bff" stroke="#e8ddff" stroke-width="4"/><rect x="255" y="103" width="13" height="14" rx="3" fill="#bafaff" stroke="#fff" stroke-width="2"/><path d="M153 139 L153 166 M153 161 L111 224 M153 161 L197 224 M153 161 L153 226" stroke="#d2e4ff" stroke-width="10" stroke-linecap="round"/><path d="M137 148 L169 148 L180 165 L153 178 L126 165Z" fill="#ffbd69" stroke="#fff0ca" stroke-width="4"/><circle cx="153" cy="161" r="9" fill="#65f0d1" stroke="#fff" stroke-width="3"/></g><text x="150" y="232" fill="#bdfaff" font-size="10" text-anchor="middle" letter-spacing="2">OBSERVATORY • REPAIR THE IMAGE</text>`;
+function fragmentSvg(index){const x=(index%3)*100,y=Math.floor(index/3)*80;return `<svg viewBox="${x} ${y} 100 80" preserveAspectRatio="none" role="img" aria-label="Telescope picture fragment">${telescopeArt}</svg>`}
+function initTelescopePuzzle(){const pieces=document.getElementById('telescopeParts'),slots=document.getElementById('telescopeSlots');if(!pieces||!slots)return;pieces.innerHTML='';slots.innerHTML='';telescopeSelected=null;telescopePlaced={};const order=[0,1,2,3,4,5,6,7,8].sort(()=>Math.random()-.5);order.forEach(index=>{const b=document.createElement('button');b.className='jigsaw-piece';b.type='button';b.dataset.part=String(index);b.draggable=true;b.innerHTML=fragmentSvg(index);b.setAttribute('aria-label','Picture fragment '+(index+1));b.onclick=()=>selectTelescopePart(b);b.ondragstart=dragTelescope;pieces.appendChild(b)});for(let i=0;i<9;i++){const slot=document.createElement('button');slot.type='button';slot.className='jigsaw-slot';slot.dataset.slot=String(i);slot.setAttribute('aria-label','Puzzle position '+(i+1));slot.innerHTML='<span class="slot-number">'+(i+1)+'</span>';slot.ondragover=e=>e.preventDefault();slot.ondrop=dropTelescope;slot.onclick=()=>{if(telescopeSelected!==null)placeTelescopePart(telescopeSelected,slot)};slots.appendChild(slot)}document.getElementById('next4').disabled=true;document.getElementById('fb4').textContent='Drag a fragment into its matching place. You can also tap a fragment, then its place.'}
+function selectTelescopePart(btn){if(btn.disabled)return;document.querySelectorAll('#telescopeParts button').forEach(b=>b.classList.remove('selected'));telescopeSelected=Number(btn.dataset.part);btn.classList.add('selected');document.getElementById('fb4').textContent='Fragment selected! Find where it belongs in the picture.'}
+function dragTelescope(e){telescopeSelected=Number(e.currentTarget.dataset.part);e.dataTransfer.setData('text/plain',String(telescopeSelected))}
+function dropTelescope(e){e.preventDefault();const slot=e.currentTarget;const raw=e.dataTransfer?.getData('text/plain');const part=raw!==''&&raw!==undefined?Number(raw):telescopeSelected;if(Number.isInteger(part))placeTelescopePart(part,slot)}
+function placeTelescopePart(part,slot){if(slot.dataset.slot!==String(part)){document.getElementById('fb4').textContent='Not quite—try another position. Look at the colours and lines along the edges.';return}if(telescopePlaced[part])return;telescopePlaced[part]=true;slot.classList.add('filled');slot.innerHTML=fragmentSvg(part);const btn=document.querySelector('#telescopeParts [data-part="'+part+'"]');if(btn){btn.disabled=true;btn.classList.remove('selected')}telescopeSelected=null;const count=Object.keys(telescopePlaced).length;document.getElementById('fb4').textContent=count===9?'🔭 Telescope repaired! You restored the complete picture. Galileo could now observe the sky.':'Great fit! '+count+' of 9 fragments placed.';if(count===9){document.getElementById('next4').disabled=false;awardXP(4)}}
+initTelescopePuzzle();
+const ellipseBoard=document.getElementById('ellipseBoard');
+function ellipsePoint(e){const r=ellipseBoard.getBoundingClientRect();return {x:(e.clientX-r.left)*340/r.width,y:(e.clientY-r.top)*210/r.height}}
+if(ellipseBoard){ellipseBoard.addEventListener('pointerdown',e=>{ellipseDrawing=true;ellipseWasDrawn=false;ellipseStart=ellipsePoint(e);ellipseBoard.setPointerCapture(e.pointerId);const el=document.getElementById('userEllipse');el.style.display='block';el.setAttribute('cx',ellipseStart.x);el.setAttribute('cy',ellipseStart.y);el.setAttribute('rx',0);el.setAttribute('ry',0)});ellipseBoard.addEventListener('pointermove',e=>{if(!ellipseDrawing)return;const p=ellipsePoint(e),el=document.getElementById('userEllipse');el.setAttribute('cx',(ellipseStart.x+p.x)/2);el.setAttribute('cy',(ellipseStart.y+p.y)/2);el.setAttribute('rx',Math.abs(p.x-ellipseStart.x)/2);el.setAttribute('ry',Math.abs(p.y-ellipseStart.y)/2)});ellipseBoard.addEventListener('pointerup',e=>{if(!ellipseDrawing)return;ellipseDrawing=false;const p=ellipsePoint(e);ellipseWasDrawn=Math.abs(p.x-ellipseStart.x)>45&&Math.abs(p.y-ellipseStart.y)>18;document.getElementById('fb5a').textContent=ellipseWasDrawn?'Ellipse drawn! Press “Check my ellipse” to finish.':'Make a wider oval by dragging farther in both directions.'})}
+function clearEllipse(){const el=document.getElementById('userEllipse');el.style.display='none';el.setAttribute('rx',0);el.setAttribute('ry',0);ellipseWasDrawn=false;document.getElementById('fb5a').textContent='Draw an oval, then check it.';orbitOK=false;document.getElementById('next5').disabled=true}
+function finishEllipse(){if(!ellipseWasDrawn){document.getElementById('fb5a').textContent='Draw a visible oval first.';return}orbitOK=true;document.getElementById('fb5a').textContent='🎉 Well done! An ellipse is an oval-shaped orbit. Kepler described planetary orbits as ellipses, with the Sun at one focus.';if(gravityOK){awardXP(5);document.getElementById('next5').disabled=false}}
+function renderMap(){let host=document.getElementById('rooms');if(!host)return;host.innerHTML='';names.forEach((n,i)=>{let unlocked=i===0||done.slice(0,i).every(Boolean);let b=document.createElement('button');b.className='room'+(unlocked?'':' locked');b.disabled=!unlocked;b.innerHTML=`<div class="emoji">${['⭐','🌍','☀️','🔭','📐'][i]}</div><h3>CHAMBER ${i+1}</h3><b>${n}</b><br><small>${done[i]?'💎 Crystal recovered':unlocked?'🔓 Available':'🔒 Locked'}</small>`;b.onclick=()=>show('room'+(i+1));host.appendChild(b)});let count=done.filter(Boolean).length;document.getElementById('hudCrystals').textContent=`💎 ${count}/5`;document.getElementById('progressbar').style.width=(count*20)+'%';document.getElementById('progressText').textContent=`${count} of 5 chambers completed • ⭐ ${cometCrystals.filter(Boolean).length}/5 bonus stars`;let old=document.getElementById('finalEscapeAction');if(old)old.remove();if(count===5){let a=document.createElement('div');a.id='finalEscapeAction';a.className='actions';let f=document.createElement('button');f.className='good';f.textContent='Go to Final Escape →';f.onclick=()=>show('final');a.appendChild(f);host.parentElement.appendChild(a)}}
+function reveal(which){discovered[which]=true;let msgs={sun:'☀️ Sun: Its apparent daily movement and yearly pattern helped people track time and seasonal changes.',moon:'🌙 Moon: Its changing phases form a repeating pattern that people could use to track time.',stars:'⭐ Stars: Recognisable star patterns helped some travellers navigate at night.'};let d=document.getElementById('discovery');d.textContent=msgs[which];d.classList.remove('hidden');if(Object.values(discovered).every(Boolean))document.getElementById('r1task').classList.remove('hidden')}
+function answer(room,choice){let correct={1:0,3:1,4:1,5:1}[room];if(room===5){gravityOK=choice===1;document.getElementById('fb5b').innerHTML=gravityOK?'<div class="feedback">Correct! Gravity is the attractive force described by Newton’s law of universal gravitation.</div>':'<div class="feedback wrong">Try again. Think about the force that attracts masses.</div>'}else{let el=document.getElementById('fb'+room);if(choice===correct){el.innerHTML='<div class="feedback">Correct! Your evidence-based reasoning is on track.</div>';if(room===1)r1correct=true;awardXP(room);document.getElementById('next'+room).disabled=false}else{el.innerHTML='<div class="feedback wrong">Not quite. Review the discovery, then try again.</div>'}}if(room===5&&orbitOK&&gravityOK){awardXP(5);document.getElementById('next5').disabled=false}}
+function modelAnswer(which){let el=document.getElementById('fb2');if(which==='geo'){el.innerHTML='<div class="feedback">Correct! In the geocentric model, Earth is at the centre.</div>';awardXP(2);document.getElementById('next2').disabled=false}else el.innerHTML='<div class="feedback wrong">This is the heliocentric model. Find the Earth-centred diagram.</div>'}
+function obs(which){let m={moon:'🌙 Galileo observed that the Moon has surface features such as mountains and craters, rather than being a perfectly smooth sphere.',jupiter:'🪐 Galileo observed four large moons orbiting Jupiter. This showed that a celestial body could have moons orbiting it.',venus:'♀️ Galileo observed phases of Venus. These observations supported the heliocentric model over the traditional Ptolemaic arrangement.'};let e=document.getElementById('obsText');e.textContent=m[which];e.classList.remove('hidden')}
+function orbitAnswer(which){let el=document.getElementById('fb5a');orbitOK=which==='ellipse';el.innerHTML=orbitOK?'<div class="feedback">Correct! Kepler’s first law states that planets move in elliptical orbits, with the Sun at one focus.</div>':'<div class="feedback wrong">Try again. Kepler’s first law uses a shape that is oval rather than perfectly circular.</div>';if(orbitOK)awardXP(5);if(orbitOK&&gravityOK)document.getElementById('next5').disabled=false}
+function complete(n){done[n-1]=true;localStorage.setItem('astroDone',JSON.stringify(done));show('map')}
+function finalAnswer(n){let e=document.getElementById('finalFeedback');if(n===1){e.innerHTML='<div class="feedback">Correct! Scientific explanations can change when new observations and evidence lead scientists to revise or improve models.</div>';document.getElementById('finishBtn').classList.remove('hidden')}else e.innerHTML='<div class="feedback wrong">Not quite. Think about the role of observations and evidence in scientific investigations.</div>'}
+function saveReflection(){let v=document.getElementById('reflection').value.trim();if(!v){document.getElementById('saved').textContent='Write a reflection before saving.';return}localStorage.setItem('astroReflection',v);document.getElementById('saved').textContent='Reflection saved in this browser.'}
+function resetGame(){if(confirm('Reset all crystals and replay from the beginning?')){done=[false,false,false,false,false];localStorage.removeItem('astroDone');localStorage.removeItem('astroReflection');cometCrystals=[false,false,false,false,false];localStorage.removeItem('astroComets');quizXP=[0,0,0,0,0];localStorage.removeItem('astroQuizXP');show('home')}}
+renderMap();
+</script>
+</body></html>
